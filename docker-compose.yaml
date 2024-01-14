@@ -1,0 +1,27 @@
+services:
+  golang:
+    depends_on:
+      - postgres
+    build:
+      context: .
+    env_file:
+      - .env
+    container_name: ${GOLANG_CONTAINER}
+    volumes:
+      - .:/app
+    ports:
+      - "${APP_LOCAL_PORT}:${APP_CONTAINER_PORT}"
+  postgres:
+    image: postgres:latest
+    env_file:
+      - .env
+    container_name: ${POSTGRES_CONTAINER}
+    ports:
+      - "${POSTGRES_LOCAL_PORT}:${POSTGRES_PORT}"
+    volumes:
+      - postgres-store:/var/lib/postgresql/data
+      - ./initdb:/docker-entrypoint-initdb.d
+
+volumes:
+  postgres-store:
+
