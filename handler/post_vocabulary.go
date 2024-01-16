@@ -4,11 +4,14 @@ import (
 	"encoding/json"
 	"net/http"
 	"golang-postgresql-restapi/entity"
-	"golang-postgresql-restapi/service"
 )
 
+type PostVocabulary struct {
+	Service  VocabularyAdder
+}
+
 //Post a new vocabulary
-func PostVocabulary(w http.ResponseWriter, r *http.Request) {
+func (p *PostVocabulary) PostVocabulary(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	//Decode http request
@@ -23,7 +26,7 @@ func PostVocabulary(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//Insert a new record
-	inserted, err := service.AddVocabulary(r.Context(), &vocabulary)
+	inserted, err := p.Service.AddVocabulary(r.Context(), &vocabulary)
 	if err != nil {
 		errorRes := ErrorResponse{
 			Message: "Failed to add a record: " + err.Error(),

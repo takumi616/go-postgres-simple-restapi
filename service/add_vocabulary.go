@@ -3,10 +3,13 @@ package service
 import (
 	"context"
 	"golang-postgresql-restapi/entity"
-	"golang-postgresql-restapi/store"
 )
 
+type AddVocabulary struct {
+	Store  VocabularyInserter	
+}
+
 //Add a new vocabulary
-func AddVocabulary(ctx context.Context, vocabulary *entity.Vocabulary) (entity.Vocabulary, error) {
-	return store.InsertVocabulary(ctx, vocabulary)
+func (a *AddVocabulary) AddVocabulary(ctx context.Context, vocabulary *entity.Vocabulary) (entity.Vocabulary, error) {
+	return a.Store.InsertVocabulary(ctx, vocabulary)
 }

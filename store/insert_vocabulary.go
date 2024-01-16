@@ -3,18 +3,18 @@ package store
 import (
 	"context"
 	"log"
-	"golang-postgresql-restapi/config"
+	"database/sql"
 	"golang-postgresql-restapi/entity"
 )
 
+type InsertVocabulary struct {
+	DbHandle  *sql.DB
+}
+
 //Insert a new record
-func InsertVocabulary(ctx context.Context, vocabulary *entity.Vocabulary) (entity.Vocabulary, error) {
-	config := config.GetConfig()
-
-	dbHandle := connectToPostgres(config)
-
+func (i InsertVocabulary) InsertVocabulary(ctx context.Context, vocabulary *entity.Vocabulary) (entity.Vocabulary, error) {
 	//Begin a transaction
-	tx, err := dbHandle.BeginTx(ctx, nil)
+	tx, err := i.DbHandle.BeginTx(ctx, nil)
 	if err != nil {
 		log.Printf("Failed to start a transaction: %v", err)
 		return entity.Vocabulary{}, err
