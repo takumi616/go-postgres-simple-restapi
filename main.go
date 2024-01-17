@@ -17,7 +17,15 @@ func main() {
 	dbHandle := store.ConnectToPostgres(config)
 
 	//Embed structs which implement interface
-	h := &handler.PostVocabulary{
+	gh := &handler.GetVocabulary{
+		Service: &service.FetchVocabulary{
+			Store: &store.SelectVocabulary{
+				DbHandle: dbHandle,
+			},
+		},
+	}
+
+	ph := &handler.PostVocabulary{
 		Service: &service.AddVocabulary{
 			Store: &store.InsertVocabulary{
 				DbHandle: dbHandle,
@@ -27,7 +35,8 @@ func main() {
 
 	//Set up routing
 	router := mux.NewRouter()
-	router.HandleFunc("/api/vocabularies", h.PostVocabulary).Methods("POST")
+	router.HandleFunc("/api/vocabularies", gh.GetAllVocabularies).Methods("GET")
+	router.HandleFunc("/api/vocabularies", ph.PostVocabulary).Methods("POST")
 
 	//Set up server struct
 	server := &http.Server{

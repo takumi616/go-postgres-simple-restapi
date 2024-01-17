@@ -22,15 +22,15 @@ func (i InsertVocabulary) InsertVocabulary(ctx context.Context, vocabulary *enti
 
 	//Insert a new record and fetch it
 	query := "INSERT INTO vocabulary (title, sentence, meaning) VALUES($1, $2, $3) RETURNING *"
-	var insertedRow entity.Vocabulary 
-	err = tx.QueryRowContext(ctx, query, vocabulary.Title, vocabulary.Sentence, vocabulary.Meaning).Scan(&insertedRow.Id, &insertedRow.Title, &insertedRow.Sentence, &insertedRow.Meaning)
+	var inserted entity.Vocabulary 
+	err = tx.QueryRowContext(ctx, query, vocabulary.Title, vocabulary.Sentence, vocabulary.Meaning).Scan(&inserted.Id, &inserted.Title, &inserted.Sentence, &inserted.Meaning)
 	if err != nil {
 		//Execute roll back
 		if rollbackErr := tx.Rollback(); rollbackErr != nil {
 			log.Fatalf("Failed to rollback this transaction: %v", rollbackErr)
 		}
 		log.Printf("Rolled back this transaction: %v", err)
-		return insertedRow, err
+		return inserted, err
 	}
 
 	//Commit transaction
@@ -38,7 +38,7 @@ func (i InsertVocabulary) InsertVocabulary(ctx context.Context, vocabulary *enti
 		log.Fatalf("Failed to commit this transaction: %v", err)
 	}
 
-	return insertedRow, nil
+	return inserted, nil
 }
 
 
