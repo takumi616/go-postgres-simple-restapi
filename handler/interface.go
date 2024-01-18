@@ -7,6 +7,7 @@ import (
 
 type VocabularyFetcher interface {
 	FetchAllVocabularies(ctx context.Context) ([]entity.Vocabulary, error)
+	FetchVocabularyById(ctx context.Context, id string) (entity.Vocabulary, error)
 }
 
 type VocabularyAdder interface {

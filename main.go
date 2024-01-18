@@ -36,6 +36,7 @@ func main() {
 	//Set up routing
 	router := mux.NewRouter()
 	router.HandleFunc("/api/vocabularies", gh.GetAllVocabularies).Methods("GET")
+	router.HandleFunc("/api/vocabularies/{id}", gh.GetVocabularyById).Methods("GET")
 	router.HandleFunc("/api/vocabularies", ph.PostVocabulary).Methods("POST")
 
 	//Set up server struct

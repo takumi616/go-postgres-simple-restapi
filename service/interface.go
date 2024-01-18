@@ -5,8 +5,9 @@ import (
 	"golang-postgresql-restapi/entity"
 )
 
-type VocabularyFetcher interface {
+type VocabularySelecter interface {
 	SelectAllVocabularies(ctx context.Context) ([]entity.Vocabulary, error)
+	SelectVocabularyById(ctx context.Context, vocabularyId int) (entity.Vocabulary, error)
 }
 
 type VocabularyInserter interface {

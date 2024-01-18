@@ -13,7 +13,7 @@ type SelectVocabulary struct {
 
 //Select all records
 func (s *SelectVocabulary) SelectAllVocabularies(ctx context.Context) ([]entity.Vocabulary, error) {
-	//Execute sql
+	//Execute select query
 	query := "SELECT * FROM vocabulary" 
 	rows, err := s.DbHandle.QueryContext(ctx, query)
 	if err != nil {
@@ -31,6 +31,20 @@ func (s *SelectVocabulary) SelectAllVocabularies(ctx context.Context) ([]entity.
 			return nil, err
 		}
 		selected = append(selected, vocabulary)
+	}
+
+	return selected, nil
+}
+
+//Select a record by Id
+func (s *SelectVocabulary) SelectVocabularyById(ctx context.Context, vocabularyId int) (entity.Vocabulary, error) {
+	//Execute select query
+	query := "SELECT * FROM vocabulary" + " WHERE id = $1"
+	var selected entity.Vocabulary
+	err := s.DbHandle.QueryRowContext(ctx, query, vocabularyId).Scan(&selected.Id, &selected.Title, &selected.Sentence, &selected.Meaning)
+	if err != nil {
+		log.Printf("Failed to select and scan a raw into go struct: %v", err)
+		return selected, err	
 	}
 
 	return selected, nil
