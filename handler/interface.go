@@ -13,3 +13,7 @@ type VocabularyFetcher interface {
 type VocabularyAdder interface {
 	AddVocabulary(ctx context.Context, vocabulary *entity.Vocabulary) (entity.Vocabulary, error)
 }
+
+type VocabularyRemover interface {
+	RemoveVocabularyById(ctx context.Context, id string) (entity.Vocabulary, error)
+}

@@ -29,11 +29,20 @@ func setUpRouting(config *config.Config) *mux.Router {
 		},
 	}
 
+	dh := &handler.DeleteVocabulary{
+		Service: &service.RemoveVocabulary{
+			Store: &store.DeleteVocabulary{
+				DbHandle: dbHandle,
+			},
+		},
+	}
+
 	//Set up routing
 	router := mux.NewRouter()
 	router.HandleFunc("/api/vocabularies", gh.GetAllVocabularies).Methods("GET")
 	router.HandleFunc("/api/vocabularies/{id}", gh.GetVocabularyById).Methods("GET")
 	router.HandleFunc("/api/vocabularies", ph.PostVocabulary).Methods("POST")
+	router.HandleFunc("/api/vocabularies/{id}", dh.DeleteVocabularyById).Methods("DELETE")
 
 	return router
 }
