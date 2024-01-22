@@ -14,6 +14,10 @@ type VocabularyInserter interface {
 	InsertVocabulary(ctx context.Context, vocabulary *entity.Vocabulary) (entity.Vocabulary, error)
 }
 
+type VocabularyUpdater interface {
+	UpdateVocabularyById(ctx context.Context, vocabulary *entity.Vocabulary, vocabularyId int) (entity.Vocabulary, error)
+}
+
 type VocabularyDeleter interface {
 	DeleteVocabularyById(ctx context.Context, vocabularyId int) (entity.Vocabulary, error)
 }

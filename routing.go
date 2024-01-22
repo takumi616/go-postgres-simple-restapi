@@ -13,7 +13,7 @@ func setUpRouting(config *config.Config) *mux.Router {
 	dbHandle := store.ConnectToPostgres(config)
 
 	//Embed structs which implement interface
-	gh := &handler.GetVocabulary{
+	get := &handler.GetVocabulary{
 		Service: &service.FetchVocabulary{
 			Store: &store.SelectVocabulary{
 				DbHandle: dbHandle,
@@ -21,7 +21,7 @@ func setUpRouting(config *config.Config) *mux.Router {
 		},
 	}
 
-	ph := &handler.PostVocabulary{
+	post := &handler.PostVocabulary{
 		Service: &service.AddVocabulary{
 			Store: &store.InsertVocabulary{
 				DbHandle: dbHandle,
@@ -29,7 +29,15 @@ func setUpRouting(config *config.Config) *mux.Router {
 		},
 	}
 
-	dh := &handler.DeleteVocabulary{
+	put := &handler.PutVocabulary{
+		Service: &service.EditVocabulary{
+			Store: &store.UpdateVocabulary{
+				DbHandle: dbHandle,
+			},
+		},
+	}
+
+	delete := &handler.DeleteVocabulary{
 		Service: &service.RemoveVocabulary{
 			Store: &store.DeleteVocabulary{
 				DbHandle: dbHandle,
@@ -39,10 +47,11 @@ func setUpRouting(config *config.Config) *mux.Router {
 
 	//Set up routing
 	router := mux.NewRouter()
-	router.HandleFunc("/api/vocabularies", gh.GetAllVocabularies).Methods("GET")
-	router.HandleFunc("/api/vocabularies/{id}", gh.GetVocabularyById).Methods("GET")
-	router.HandleFunc("/api/vocabularies", ph.PostVocabulary).Methods("POST")
-	router.HandleFunc("/api/vocabularies/{id}", dh.DeleteVocabularyById).Methods("DELETE")
+	router.HandleFunc("/api/vocabularies", get.GetAllVocabularies).Methods("GET")
+	router.HandleFunc("/api/vocabularies/{id}", get.GetVocabularyById).Methods("GET")
+	router.HandleFunc("/api/vocabularies", post.PostVocabulary).Methods("POST")
+	router.HandleFunc("/api/vocabularies/{id}", put.PutVocabularyById).Methods("PUT")
+	router.HandleFunc("/api/vocabularies/{id}", delete.DeleteVocabularyById).Methods("DELETE")
 
 	return router
 }
