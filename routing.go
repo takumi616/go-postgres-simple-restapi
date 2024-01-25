@@ -15,56 +15,57 @@ func setUpRouting(config *config.Config) *mux.Router {
 
 	//Get handler map
 	m := getHandlerMap(dbHandle)
+	handleGet := m["get"].(*handler.GetVocabulary)
+	handlePost := m["post"].(*handler.PostVocabulary)
+	handlePut := m["put"].(*handler.PutVocabulary)
+	handleDelete := m["delete"].(*handler.DeleteVocabulary)
 
 	//Set up routing
 	router := mux.NewRouter()
-	router.HandleFunc("/api/vocabularies", m["get"].(*handler.GetVocabulary).GetAllVocabularies).Methods("GET")
-	router.HandleFunc("/api/vocabularies/{id}", m["get"].(*handler.GetVocabulary).GetVocabularyById).Methods("GET")
-	router.HandleFunc("/api/vocabularies", m["post"].(*handler.PostVocabulary).PostVocabulary).Methods("POST")
-	router.HandleFunc("/api/vocabularies/{id}", m["put"].(*handler.PutVocabulary).PutVocabularyById).Methods("PUT")
-	router.HandleFunc("/api/vocabularies/{id}", m["delete"].(*handler.DeleteVocabulary).DeleteVocabularyById).Methods("DELETE")
+	router.HandleFunc("/api/vocabularies", handleGet.GetAllVocabularies).Methods("GET")
+	router.HandleFunc("/api/vocabularies/{id}", handleGet.GetVocabularyById).Methods("GET")
+	router.HandleFunc("/api/vocabularies", handlePost.PostVocabulary).Methods("POST")
+	router.HandleFunc("/api/vocabularies/{id}", handlePut.PutVocabularyById).Methods("PUT")
+	router.HandleFunc("/api/vocabularies/{id}", handleDelete.DeleteVocabularyById).Methods("DELETE")
 
 	return router
 }
 
+//Set up embedded struct 
 func getHandlerMap(dbHandle *sql.DB) (map[string]interface{}) {
 	m := make(map[string]interface{})
 
-	get := &handler.GetVocabulary{
+	m["get"] = &handler.GetVocabulary{
 		Service: &service.FetchVocabulary{
 			Store: &store.SelectVocabulary{
 				DbHandle: dbHandle,
 			},
 		},
 	}
-	m["get"] = get
 
-	post := &handler.PostVocabulary{
+	m["post"] = &handler.PostVocabulary{
 		Service: &service.AddVocabulary{
 			Store: &store.InsertVocabulary{
 				DbHandle: dbHandle,
 			},
 		},
 	}
-	m["post"] = post
 
-	put := &handler.PutVocabulary{
+	m["put"] = &handler.PutVocabulary{
 		Service: &service.EditVocabulary{
 			Store: &store.UpdateVocabulary{
 				DbHandle: dbHandle,
 			},
 		},
 	}
-	m["put"] = put
 
-	delete := &handler.DeleteVocabulary{
+	m["delete"] = &handler.DeleteVocabulary{
 		Service: &service.RemoveVocabulary{
 			Store: &store.DeleteVocabulary{
 				DbHandle: dbHandle,
 			},
 		},
 	}
-	m["delete"] = delete
 
 	return m
 }
