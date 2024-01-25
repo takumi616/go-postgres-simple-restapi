@@ -10,11 +10,11 @@ type PostVocabulary struct {
 	Service  VocabularyAdder
 }
 
-//Post a new vocabulary
+//A Handler which responds to POST request 
 func (p *PostVocabulary) PostVocabulary(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	//Decode http request
+	//Decode http request body
 	var vocabulary entity.Vocabulary
 	err := json.NewDecoder(r.Body).Decode(&vocabulary)
 	if err != nil {
@@ -25,7 +25,7 @@ func (p *PostVocabulary) PostVocabulary(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	//Insert a new record
+	//Call a service layer's method via interface
 	inserted, err := p.Service.AddVocabulary(r.Context(), &vocabulary)
 	if err != nil {
 		errorRes := ErrorResponse{

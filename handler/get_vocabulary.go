@@ -9,11 +9,11 @@ type GetVocabulary struct {
 	Service  VocabularyFetcher
 }
 
-//Get all vocabularies
+//A Handler which responds to GET request (Get all data)
 func (g *GetVocabulary) GetAllVocabularies(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	//Fetch all records
+	//Call a service layer's method via interface
 	selected, err := g.Service.FetchAllVocabularies(r.Context())
 	if err != nil {
 		errorRes := ErrorResponse{
@@ -26,13 +26,13 @@ func (g *GetVocabulary) GetAllVocabularies(w http.ResponseWriter, r *http.Reques
 	writeJsonResponse(w, http.StatusOK, selected)
 }
 
-//Get a vocabulary by Id
+//A Handler which responds to GET request (Get single data by id)
 func (g *GetVocabulary) GetVocabularyById(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	//Retrieve a map of route variables
 	vars := mux.Vars(r)
-	//Fetch a record by Id
+	//Call a service layer's method via interface
 	selected, err := g.Service.FetchVocabularyById(r.Context(), vars["id"])
 	if err != nil {
 		errorRes := ErrorResponse{

@@ -18,5 +18,6 @@ func (e *EditVocabulary) EditVocabularyById(ctx context.Context, vocabulary *ent
 		log.Fatal("Failed to get a vocabularyId: %v", err)
 	}
 
+	//Call a store layer's method via interface
 	return e.Store.UpdateVocabularyById(ctx, vocabulary, vocabularyId)
 }

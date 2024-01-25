@@ -18,5 +18,6 @@ func (r *RemoveVocabulary) RemoveVocabularyById(ctx context.Context, id string) 
 		log.Fatal("Failed to get a vocabularyId: %v", err)
 	}
 
+	//Call a store layer's method via interface
 	return r.Store.DeleteVocabularyById(ctx, vocabularyId)
 }

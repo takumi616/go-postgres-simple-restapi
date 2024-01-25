@@ -10,7 +10,7 @@ import (
 )
 
 func runHTTPServer(ctx context.Context) {
-	//Get config
+	//Get environment variables
 	config := config.GetConfig()
 	//Get router
 	router := setUpRouting(config)
@@ -22,10 +22,11 @@ func runHTTPServer(ctx context.Context) {
 
 	//Run http server in another groutine
 	ctx, stop := signal.NotifyContext(ctx, syscall.SIGTERM)
+	defer stop()
 	go func() {
 		err := server.ListenAndServe()
 		if err != http.ErrServerClosed {
-			log.Printf("Http server error happened while calling ListenAndServe method.")
+			log.Printf("Failed to run http server: %v", err)
 			stop()
 		}
 	}()

@@ -11,12 +11,11 @@ type FetchVocabulary struct {
 	Store  VocabularySelecter
 }
 
-//Fetch all vocabularies
 func (f *FetchVocabulary) FetchAllVocabularies(ctx context.Context) ([]entity.Vocabulary, error) {
+	//Call a store layer's method via interface
 	return f.Store.SelectAllVocabularies(ctx)
 }
 
-//Fetch a record by Id
 func (f *FetchVocabulary) FetchVocabularyById(ctx context.Context, id string) (entity.Vocabulary, error) {
 	//Convert string type into int
 	vocabularyId, err := strconv.Atoi(id)
@@ -24,5 +23,6 @@ func (f *FetchVocabulary) FetchVocabularyById(ctx context.Context, id string) (e
 		log.Fatal("Failed to get a vocabularyId: %v", err)
 	}
 
+	//Call a store layer's method via interface
 	return f.Store.SelectVocabularyById(ctx, vocabularyId)
 }
