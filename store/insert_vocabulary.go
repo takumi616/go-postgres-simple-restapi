@@ -11,7 +11,7 @@ type InsertVocabulary struct {
 	DbHandle  *sql.DB
 }
 
-func (i InsertVocabulary) InsertVocabulary(ctx context.Context, vocabulary *entity.Vocabulary) (entity.Vocabulary, error) {
+func (i *InsertVocabulary) InsertVocabulary(ctx context.Context, vocabulary *entity.Vocabulary) (entity.Vocabulary, error) {
 	//Begin a transaction
 	tx, err := i.DbHandle.BeginTx(ctx, nil)
 	if err != nil {
